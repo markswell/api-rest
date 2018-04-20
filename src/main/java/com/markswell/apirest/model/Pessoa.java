@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import lombok.NonNull;
-
 @Entity
 @Table(name="pessoa")
 public class Pessoa {
@@ -18,7 +16,7 @@ public class Pessoa {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long codigo;
 	
-	@NonNull
+	@NotNull
 	private String nome;
 	
 	@NotNull
