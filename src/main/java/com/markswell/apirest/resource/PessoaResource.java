@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,13 @@ public class PessoaResource {
 	public ResponseEntity<Pessoa> atualizar(@PathVariable	Long codigo, @Valid @RequestBody Pessoa pessoa){
 		Pessoa pessoaRetorno = service.atualizar(pessoa, codigo);
 		return ResponseEntity.ok().body(pessoaRetorno);
+	}
+	
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarAtivo(@PathVariable Long codigo, @RequestBody boolean ativo){
+		service.atualizarStatus(codigo, ativo);
+		
 	}
 	
 	

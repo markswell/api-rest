@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ApiRestHendlerExeption extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) { 
 		
 		String mUser = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mDev = ex.getCause().toString();
+		String mDev = ex.getCause() != null ?  ex.getCause().toString() : ex.toString();
 		
 		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
 		
@@ -65,6 +66,17 @@ public class ApiRestHendlerExeption extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, listaErros, new HttpHeaders(), HttpStatus.NOT_FOUND, request); 
 		
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+		String mUser = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
+		String mDev = ex.toString();
+		
+		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
+		
+		return handleExceptionInternal(ex, listaErros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); 
+			
 	}
 	
 	public static class Erro {

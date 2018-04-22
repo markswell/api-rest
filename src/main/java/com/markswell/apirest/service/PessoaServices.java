@@ -21,13 +21,23 @@ public class PessoaServices {
 	
 	
 	public Pessoa atualizar(Pessoa pessoa, Long codigo) {
-		Optional<Pessoa> findById = repository.findById(codigo);
-		Pessoa pessoaRetorno = findById.isPresent() ? findById.get() : null;
-
-		if (pessoaRetorno == null)
-			throw new EmptyResultDataAccessException(1);
+		Pessoa pessoaRetorno = buscarPessoaPeloCodigo(codigo);
 		BeanUtils.copyProperties(pessoa, pessoaRetorno, "codigo");
 		return repository.save(pessoaRetorno);
 	}
+
+	public void atualizarStatus(Long codigo, boolean ativo) {
+		Pessoa pessoa = buscarPessoaPeloCodigo(codigo);
+		pessoa.setAtivo(ativo);
+		repository.save(pessoa);
+	}
 	
+	private Pessoa buscarPessoaPeloCodigo(Long codigo) {
+		Optional<Pessoa> findById = repository.findById(codigo);
+		Pessoa pessoaRetorno = findById.isPresent() ? findById.get() : null;
+		
+		if (pessoaRetorno == null)
+			throw new EmptyResultDataAccessException(1);
+		return pessoaRetorno;
+	}
 }
