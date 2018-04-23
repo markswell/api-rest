@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -60,7 +61,7 @@ public class ApiRestHendlerExeption extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handlerEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
 		
 		String mUser = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
-		String mDev = ex.toString();
+		String mDev = ExceptionUtils.getRootCauseMessage(ex);
 		
 		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
 		
