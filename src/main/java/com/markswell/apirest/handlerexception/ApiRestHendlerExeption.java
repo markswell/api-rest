@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.markswell.apirest.service.excepition.PessoaInexistenteOuInativaExcepition;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -33,7 +34,7 @@ public class ApiRestHendlerExeption extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) { 
 		
 		String mUser = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mDev = ex.getCause() != null ?  ex.getCause().toString() : ex.toString();
+		String mDev = ExceptionUtils.getRootCauseMessage(ex);
 		
 		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
 		
@@ -72,12 +73,22 @@ public class ApiRestHendlerExeption extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
 		String mUser = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
-		String mDev = ex.toString();
+		String mDev = ExceptionUtils.getRootCauseMessage(ex);
 		
 		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
 		
 		return handleExceptionInternal(ex, listaErros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request); 
 			
+	}
+
+	@ExceptionHandler(PessoaInexistenteOuInativaExcepition.class)
+	public ResponseEntity<?> pessoaInexistenteOuInativaExcepitionHandler(PessoaInexistenteOuInativaExcepition ex, WebRequest request){
+		String mUser = messageSource.getMessage("lancamento.pessoa-nulla", null, LocaleContextHolder.getLocale());
+		String mDev = ExceptionUtils.getRootCauseMessage(ex);
+
+		List<Erro> listaErros = Arrays.asList(new Erro(mUser, mDev));
+
+		return handleExceptionInternal(ex, listaErros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
 	public static class Erro {

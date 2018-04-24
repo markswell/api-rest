@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import com.markswell.apirest.service.LancamentoServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class LancamentoResource {
 	private LancamentoRepository repository;
 	@Autowired
 	private ApplicationEventPublisher publisher;
+
+	@Autowired
+	private LancamentoServices services;
 	
 	@GetMapping
 	public ResponseEntity<List<Lancamento>> listar(){
