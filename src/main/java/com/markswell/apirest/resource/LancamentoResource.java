@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import com.markswell.apirest.service.LancamentoServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,9 +37,8 @@ public class LancamentoResource {
 	private LancamentoServices services;
 	
 	@GetMapping
-	public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter filter){
-		List<Lancamento> lancamento = repository.filtrar(filter);
-		return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento) : ResponseEntity.noContent().build();
+	public Page<Lancamento> pesquisar(LancamentoFilter filter, Pageable pageable){
+		return repository.filtrar(filter, pageable);
 	}
 	
 	@PostMapping
