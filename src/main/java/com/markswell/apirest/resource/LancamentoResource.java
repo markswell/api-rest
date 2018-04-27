@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.markswell.apirest.event.RecursoCriadoEvent;
 import com.markswell.apirest.model.Lancamento;
 import com.markswell.apirest.repository.LancamentoRepository;
+import com.markswell.apirest.repository.filter.LancamentoFilter;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -34,9 +35,9 @@ public class LancamentoResource {
 	private LancamentoServices services;
 	
 	@GetMapping
-	public ResponseEntity<List<Lancamento>> listar(){
-		List<Lancamento> lancamento = repository.findAll();
-		return !lancamento.isEmpty() ? ResponseEntity.ok(repository.findAll()) : ResponseEntity.noContent().build();
+	public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter filter){
+		List<Lancamento> lancamento = repository.filtrar(filter);
+		return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento) : ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping
